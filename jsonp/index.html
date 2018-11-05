@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function jsonp({url,data,cb}){
+      let arr = []
+      let data2 = {...data,cb}
+      for(let key in data2){
+        arr.push(`${key}=${data2[key]}`)
+      }
+      console.log(url)
+      let s = JSON.stringify(data) == '{}' ? '':'?'
+      let url1 = url + s + arr.join('&')
+      window[cb] = function(data1){
+       console.log(data1)
+       document.body.removeChild(script)
+      }
+      let script = document.createElement('script')
+      console.log(url1)
+       script.src = url1
+       document.body.appendChild(script)
+    }
+    let url = 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su'
+    jsonp({
+      url:url,
+      data:{
+       json: 1,
+        p: 3,
+        wd: '',
+        sid:'',
+        req: 2,
+        sc: 'eb',
+        csor: 0,
+        pwd: 'as'
+      },
+      cb:'show'
+    })
+  </script>
+</body>
+</html>
