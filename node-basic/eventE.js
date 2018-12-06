@@ -14,6 +14,7 @@ class EventEmitter
   //从数组中删除指定元素用filter
 this._events[name] = this._events[name].filter(item=>item!=fn)
  }
+ //还可以传参数name,...args当做回调函数的参数
  emit(name){
    this._events[name].forEach(element => {
      element()
