@@ -1,3 +1,5 @@
+
+
      //手写promiseA+
      function myPromise(task){
        let that = this
@@ -94,14 +96,17 @@
      //手写实现all,race,reslove方法
 
     myPromise.all = function(promises){
+        let result = []
+        let count = 0
     return new Promise(function(resolve,reject){
-      let values= []
-         promises.forEach((item,index)=>{
-           item.then(function(value){
-             values.push(value)
-             if(index == promises.length){resolve(values)}
-           },reject)
-         })
+      for(let i  = 0;i<promises.length;i++){
+          promises[i].then(function(value){
+            result[i] = value
+            if(++count == promises.length){
+                resolve(result)
+            }
+          },reject)
+        } 
      })
     }
 
@@ -129,3 +134,52 @@
     Promise.prototype.catch = function(onRejected) {
       return this.then(null, onRejected);
   }
+
+  //foreach里面假如是异步 那么要根据时间谁快来先执行谁
+ let p1= new Promise(function(reslove,reject){
+      setTimeout(()=>{
+          reslove(1)
+      },2000)
+ })
+ let p2 =  new Promise(function(reslove,reject){
+    setTimeout(()=>{
+      reslove(2)
+    },1000)
+})
+  function race(promises){
+   /*  promises.forEach((item,index)=>{
+       item.then(function(){
+         console.log('index',index)
+       })
+    }) */
+    for(let i = 0 ; i<promises.length;i++){
+        promises[i].then(function(){
+            console.log('index',i)
+        })
+    }
+  }
+
+  race([p1,p2])
+
+
+  function a(){
+      setTimeout(()=>{
+          console.log(0)
+      },3000)
+  }
+  function b(){
+    setTimeout(()=>{
+        console.log(1)
+    },1000)
+}
+function c(){
+    setTimeout(()=>{
+        console.log(2)
+    },0)
+}
+function d(){
+    console.log(4)
+}
+[a,b,c,d].forEach((item,index)=>{
+    item.call(null)
+})
