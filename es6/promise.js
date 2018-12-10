@@ -82,7 +82,7 @@
              then.call(x,function(y){
                resolvePromise(promise2,y,resolve,reject)
              },reject);
-            }
+            }else{reslove(x)}
           }catch(e){
             reject(e);
           };
