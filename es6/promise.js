@@ -39,26 +39,27 @@
         fullfilled = typeof fullfilled == 'function' ? fullfilled :function(value){return value}
         rejected = typeof rejected == 'function' ? rejected : function(value){throw value}
         let that = this
+        let self = this
         let promise2
         if(that.status == 'fullfilled'){
           promise2 = new Promise(function(resolve,reject){
-             let x = fullfilled()
+             let x = fullfilled(self.value)
              resolvePromise(promise2,x,resolve,reject)
           })
           
         }else if(that.status == 'rejected'){
           promise2 = new Promise(function(resolve,reject){
-            let x = rejected()
+            let x = rejected(self.value)
             resolvePromise(promise2,x,resolve,reject)
          })
         }else if(that.status == 'pending'){
           promise2 = new Promise(function(resolve,reject){
             that.fullfilledCallbacks.push(function(){
-              let x = fullfilled()
+              let x = fullfilled(self.value)
               resolvePromise(promise2,x,resolve,reject)
             })
             that.rejectedCallbacks.push(function(){
-              let x = rejected()
+              let x = rejected(self.value)
               resolvePromise(promise2,x,resolve,reject)
             })
          })
