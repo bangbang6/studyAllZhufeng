@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    .whole{
+        width:100%;
+        height:600px;
+       
+    }
+    .ball{
+        width:60px;
+        height:60px;
+        border-radius: 50%
+    }
+    
+    </style>
+</head>
+<body>
+    <div class="whole">
+            <div class="ball ball1" style='margin-left:0;background-color:red'></div>
+            <div class="ball ball2" style='margin-left:0;background-color:blue'></div>
+            <div class="ball ball3" style='margin-left:0;background-color:green'></div>
+    </div>
+    
+</body>
+<script>
+    let $  = document.querySelector.bind(document)
+    let ball1 = $('.ball1')
+    let ball2 = $('.ball2')
+    let ball3 = $('.ball3')
+    //promise版本
+    function move(el,targrt){
+        
+        return new Promise(function(reslove,reject){
+           let timer = setInterval(()=>{
+              
+            var left = parseInt(el.style.marginLeft)
+            console.log(left)
+            if(left++ < targrt){
+               el.style.marginLeft =left +'px'
+              console.log( el.style.marginLeft )
+            }else{
+                
+                clearInterval(timer)
+
+                reslove()
+            }
+           },13)
+         
+        })
+       
+    }
+/*     move(ball1,200).then(function(){
+        move(ball2,200).then(function(){
+            move(ball3,200).then(function(){
+                console.log(1)
+            })
+        })
+    }) */
+    function co(gen){  
+        let it = gen()  
+     return new Promise(function(resolve,reject){
+
+        (function next(lastValue){
+        let r = it.next(lastValue)
+        if(!r.done){
+            r.value.then(function(data){
+                next(data)
+            },reject)
+            }else{
+                resolve(r.value)
+            }
+        }
+    )()
+    
+  })
+}
+    //generator版本
+  /*   function *go(){
+        yield move(ball1,200)
+        yield move(ball2,200)
+        yield move(ball3,200)
+    }
+    co(go) */
+
+    //asayc await版本
+
+    async function go(){
+        await move(ball1,200)
+        await move(ball2,200)
+        await move(ball3,200)
+    } 
+    go()
+</script>
+</html>
